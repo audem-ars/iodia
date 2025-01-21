@@ -186,7 +186,6 @@ const CountrySelector = () => {
     'syria': { year: 1946, note: 'Independence from France' },
     'taiwan': { year: 1949, note: 'Republic of China relocated' },
     'tajikistan': { year: 1991, note: 'Independence from Soviet Union' },
-    'tajikistan': { year: 1991, note: 'Independence from Soviet Union' },
     'tanzania': { year: 1961, note: 'Independence from UK' },
     'thailand': { year: 1932, note: 'Constitutional monarchy established' },
     'togo': { year: 1960, note: 'Independence from France' },

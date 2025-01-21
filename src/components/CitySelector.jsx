@@ -75,7 +75,6 @@ const CitySelector = () => {
 
     // Canadian Provincial Capitals
     'edmonton': { year: 1795, note: 'Capital of Alberta', country: 'Canada' },
-    'victoria': { year: 1843, note: 'Capital of British Columbia', country: 'Canada' },
     'winnipeg': { year: 1738, note: 'Capital of Manitoba', country: 'Canada' },
     'fredericton': { year: 1785, note: 'Capital of New Brunswick', country: 'Canada' },
     'st. johns': { year: 1583, note: 'Capital of Newfoundland and Labrador', country: 'Canada' },
@@ -171,7 +170,6 @@ const CitySelector = () => {
     'bangui': { year: 1960, note: 'Capital of Central African Republic', country: 'Central African Republic' },
     'ndjamena': { year: 1960, note: 'Capital of Chad', country: 'Chad' },
     'santiago': { year: 1818, note: 'Capital of Chile', country: 'Chile' },
-    'beijing': { year: 1949, note: 'Capital of China', country: 'China' },
     'bogota': { year: 1819, note: 'Capital of Colombia', country: 'Colombia' },
     'moroni': { year: 1975, note: 'Capital of Comoros', country: 'Comoros' },
     'brazzaville': { year: 1960, note: 'Capital of Republic of the Congo', country: 'Republic of the Congo' },
@@ -221,7 +219,6 @@ const CitySelector = () => {
     'jerusalem': { year: 1950, note: 'Claimed Capital of Israel', country: 'Israel' },
     'rome': { year: 1871, note: 'Capital of Italy', country: 'Italy' },
     'kingston': { year: 1962, note: 'Capital of Jamaica', country: 'Jamaica' },
-    'tokyo': { year: 1868, note: 'Capital of Japan', country: 'Japan' },
     'amman': { year: 1946, note: 'Capital of Jordan', country: 'Jordan' },
     'nur-sultan': { year: 1997, note: 'Capital of Kazakhstan', country: 'Kazakhstan' },
     'nairobi': { year: 1963, note: 'Capital of Kenya', country: 'Kenya' },
@@ -309,7 +306,6 @@ const CitySelector = () => {
     'dushanbe': { year: 1924, note: 'Capital of Tajikistan', country: 'Tajikistan' },
     'dodoma': { year: 1907, note: 'Capital of Tanzania', country: 'Tanzania' },
     'bangkok': { year: 1782, note: 'Capital of Thailand', country: 'Thailand' },
-    'dili': { year: 1769, note: 'Capital of Timor-Leste', country: 'Timor-Leste' },
     'lomé': { year: 1897, note: 'Capital of Togo', country: 'Togo' },
     'nuku\'alofa': { year: 1875, note: 'Capital of Tonga', country: 'Tonga' },
     'port of spain': { year: 1757, note: 'Capital of Trinidad and Tobago', country: 'Trinidad and Tobago' },
