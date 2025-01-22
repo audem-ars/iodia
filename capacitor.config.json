@@ -1,0 +1,6 @@
+{
+  "appId": "com.iodia.app",
+  "appName": "Iodia",
+  "webDir": "build",
+  "bundledWebRuntime": false
+}

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Iodia</string>
+    <string name="title_activity_main">Iodia</string>
+    <string name="package_name">com.iodia.app</string>
+    <string name="custom_url_scheme">com.iodia.app</string>
+</resources>
