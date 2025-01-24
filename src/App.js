@@ -8,6 +8,7 @@ import ElectricBrandSelector from './components/ElectricBrandSelector';
 import ArtistSelector from './components/ArtistSelector';
 import AuthorSelector from './components/AuthorSelector';
 import ActorSelector from './components/ActorSelector';
+import { Link } from 'react-router-dom';
 
 // Title component with water drips
 const AnimatedTitle = () => (
@@ -505,6 +506,14 @@ const App = () => {
                             Explore our comprehensive selection of filters for countries, cities, brands, and more.
                             Click on any card to expand and view its content.
                         </p>
+                        <Link 
+  to="/galaxy" 
+  className="inline-block px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 
+    text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 
+    hover:scale-105 backdrop-blur-sm"
+>
+  Explore Galaxy Page →
+</Link>
 
                         {/* Zodiac Circle */}
                         <ZodiacCircle />
