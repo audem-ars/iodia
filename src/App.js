@@ -8,6 +8,9 @@ import ElectricBrandSelector from './components/ElectricBrandSelector';
 import ArtistSelector from './components/ArtistSelector';
 import AuthorSelector from './components/AuthorSelector';
 import ActorSelector from './components/ActorSelector';
+import FinancialSelector from './components/FinancialSelector';
+import WaterBackground from './components/WaterBackground'; // Import the external component
+
 import { Link } from 'react-router-dom';
 
 // Title component with water drips
@@ -100,105 +103,6 @@ const AnimatedTitle = () => (
             }
         `}</style>
     </div>
-);
-// Enhanced Water Background Component
-const WaterBackground = () => (
-  <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-    {/* Dark turquoise base layer with fade effect */}
-    <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/30 via-cyan-800/20 to-transparent">
-      <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-cyan-500/5" />
-    </div>
-
-    {/* Enhanced base water effect */}
-    <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-blue-600/10">
-      {/* Levitating 3D Dot pattern with enhanced depth */}
-      {[...Array(4)].map((_, index) => (
-        <div
-          key={index}
-          className="absolute inset-0"
-          style={{
-            animation: `water ${25 + index * 7}s linear infinite, levitate ${8 + index * 2}s ease-in-out infinite alternate`,
-            animationDelay: `${-index * 5}s`,
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%230EA5E9' fill-opacity='${0.3 - index * 0.05}' fill-rule='evenodd'/%3E%3C/svg%3E")`,
-            opacity: 0.95 - index * 0.15,
-            transform: `translateZ(${index * 10}px)`,
-          }}
-        />
-      ))}
-    </div>
-
-    {/* Light ray emitting dots */}
-    {[...Array(25)].map((_, index) => (
-      <div
-        key={`ray-${index}`}
-        className="absolute rounded-full bg-cyan-300/40 blur-sm"
-        style={{
-          width: Math.random() * 6 + 3 + 'px',
-          height: Math.random() * 6 + 3 + 'px',
-          left: `${Math.random() * 100}%`,
-          top: `${Math.random() * 100}%`,
-          animation: `lightRay ${15 + Math.random() * 10}s linear infinite, levitate ${6 + Math.random() * 4}s ease-in-out infinite alternate`,
-          animationDelay: `-${Math.random() * 10}s`,
-          opacity: Math.random() * 0.5 + 0.3,
-          boxShadow: `0 0 ${Math.random() * 15 + 10}px ${Math.random() * 5 + 5}px rgba(34, 211, 238, 0.3)`,
-        }}
-      />
-    ))}
-
-    {/* Enhanced light reflection overlay */}
-    <div className="absolute inset-0">
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `linear-gradient(
-            45deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.07) 45%,
-            rgba(255, 255, 255, 0.15) 50%,
-            rgba(255, 255, 255, 0.07) 55%,
-            transparent 100%
-          )`,
-          animation: 'shimmer 12s linear infinite'
-        }}
-      />
-    </div>
-
-    {/* Dimensional depth overlay */}
-    <div className="absolute inset-0 bg-gradient-to-t from-cyan-900/20 via-transparent to-cyan-500/10" />
-
-    {/* Add these style definitions to your existing CSS */}
-    <style>{`
-      @keyframes water {
-        0% { background-position: 0% 0%; }
-        100% { background-position: 100% 100%; }
-      }
-      
-      @keyframes shimmer {
-        0% { transform: translateX(-100%) translateY(-100%); }
-        100% { transform: translateX(100%) translateY(100%); }
-      }
-      
-      @keyframes levitate {
-        0% { transform: translateY(0) translateZ(0); }
-        100% { transform: translateY(-20px) translateZ(20px); }
-      }
-      
-      @keyframes lightRay {
-        0% { 
-          transform: scale(1) rotate(0deg);
-          box-shadow: 0 0 10px 5px rgba(34, 211, 238, 0.3);
-        }
-        50% { 
-          transform: scale(1.5) rotate(180deg);
-          box-shadow: 0 0 20px 10px rgba(34, 211, 238, 0.4);
-        }
-        100% { 
-          transform: scale(1) rotate(360deg);
-          box-shadow: 0 0 10px 5px rgba(34, 211, 238, 0.3);
-        }
-      }
-    `}</style>
-  </div>
 );
 
 // Zodiac signs data
@@ -492,6 +396,12 @@ const App = () => {
             icon: '🎭',
             component: <ActorSelector />,
         },
+        {
+            title: 'Financial Institution Selector',
+            description: 'Find financial institutions by zodiac sign and sector.',
+            icon: '🏦',
+            component: <FinancialSelector />,
+        }
     ];
 
     return (
@@ -513,6 +423,24 @@ const App = () => {
     hover:scale-105 backdrop-blur-sm"
 >
   Explore Galaxy Page →
+</Link>
+
+<Link 
+  to="/your-number" 
+  className="inline-block px-6 py-3 ml-4 bg-gradient-to-r from-purple-500 to-pink-500 
+    text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 
+    hover:scale-105 backdrop-blur-sm"
+>
+  Discover Your Numerology →
+</Link>
+
+<Link 
+  to="/compatibility" 
+  className="inline-block px-6 py-3 ml-4 bg-gradient-to-r from-indigo-500 to-violet-500 
+    text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 
+    hover:scale-105 backdrop-blur-sm"
+>
+  Numerology Compatibility →
 </Link>
 
                         {/* Zodiac Circle */}
