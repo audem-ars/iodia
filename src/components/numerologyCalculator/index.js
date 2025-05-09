@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { calculateValue, reduceToSingleDigit, findWordsByValue } from '../../data/numerology/numerologyMap';
+import WaterBackground from '../WaterBackground'; // Import the WaterBackground component
 import { words as aWords } from '../../data/dictionary/a';
 import { words as bWords } from '../../data/dictionary/b';
 import { words as cWords } from '../../data/dictionary/c';
@@ -66,90 +67,97 @@ const NumerologyCalculator = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6">
-      <div className="mb-8">
-        <div className="flex gap-4 mb-4">
-          <input
-            type="text"
-            value={word}
-            onChange={(e) => setWord(e.target.value)}
-            placeholder="Enter a word..."
-            className="flex-1 p-2 rounded border border-cyan-200 bg-white/20 backdrop-blur-sm"
-          />
-          <button
-            onClick={calculateWord}
-            className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded"
-          >
-            Calculate
-          </button>
-        </div>
+    <div className="min-h-screen relative overflow-hidden bg-transparent">
+      {/* Add the WaterBackground component */}
+      <WaterBackground />
+      
+      <div className="relative z-10 bg-transparent">
+        <div className="w-full max-w-4xl mx-auto p-6">
+          <div className="mb-8">
+            <div className="flex gap-4 mb-4">
+              <input
+                type="text"
+                value={word}
+                onChange={(e) => setWord(e.target.value)}
+                placeholder="Enter a word..."
+                className="flex-1 p-2 rounded border border-cyan-200 bg-white/20 backdrop-blur-sm"
+              />
+              <button
+                onClick={calculateWord}
+                className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded"
+              >
+                Calculate
+              </button>
+            </div>
 
-        {results && (
-          <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
-            <h3 className="text-xl mb-2">Results for: {results.word}</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <h4 className="font-semibold">Letter Breakdown:</h4>
-                {results.letterBreakdown.map(({ letter, value }, index) => (
-                  <div key={index} className="flex justify-between">
-                    <span>{letter.toUpperCase()}</span>
-                    <span>{value}</span>
+            {results && (
+              <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
+                <h3 className="text-xl mb-2">Results for: {results.word}</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="font-semibold">Letter Breakdown:</h4>
+                    {results.letterBreakdown.map(({ letter, value }, index) => (
+                      <div key={index} className="flex justify-between">
+                        <span>{letter.toUpperCase()}</span>
+                        <span>{value}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-              <div>
-                <div className="mb-2">
-                  <span className="font-semibold">Complete Value:</span> {results.completeValue}
+                  <div>
+                    <div className="mb-2">
+                      <span className="font-semibold">Complete Value:</span> {results.completeValue}
+                    </div>
+                    <div>
+                      <span className="font-semibold">Reduced Value:</span> {results.reducedValue}
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <span className="font-semibold">Reduced Value:</span> {results.reducedValue}
-                </div>
               </div>
-            </div>
+            )}
           </div>
-        )}
-      </div>
 
-      <div>
-        <div className="flex gap-4 mb-4">
-          <input
-            type="number"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            placeholder="Enter number..."
-            className="flex-1 p-2 rounded border border-cyan-200 bg-white/20 backdrop-blur-sm"
-          />
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={isReduced}
-              onChange={(e) => setIsReduced(e.target.checked)}
-              className="rounded"
-            />
-            Search reduced values (1-9)
-          </label>
-          <button
-            onClick={searchByValue}
-            className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded"
-          >
-            Find Words
-          </button>
+          <div>
+            <div className="flex gap-4 mb-4">
+              <input
+                type="number"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                placeholder="Enter number..."
+                className="flex-1 p-2 rounded border border-cyan-200 bg-white/20 backdrop-blur-sm"
+              />
+              <label className="flex items-center gap-2 text-white">
+                <input
+                  type="checkbox"
+                  checked={isReduced}
+                  onChange={(e) => setIsReduced(e.target.checked)}
+                  className="rounded"
+                />
+                Search reduced values (1-9)
+              </label>
+              <button
+                onClick={searchByValue}
+                className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded"
+              >
+                Find Words
+              </button>
+            </div>
+
+            {valueSearchResults.length > 0 && (
+              <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
+                <h3 className="text-xl mb-2 text-white">
+                  Words with {isReduced ? 'reduced' : 'complete'} value {searchValue}:
+                </h3>
+                <div className="grid grid-cols-3 gap-2">
+                  {valueSearchResults.map((word, index) => (
+                    <div key={index} className="p-2 bg-white/5 rounded text-white">
+                      {word}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-
-        {valueSearchResults.length > 0 && (
-          <div className="bg-white/10 backdrop-blur-md rounded-lg p-4">
-            <h3 className="text-xl mb-2">
-              Words with {isReduced ? 'reduced' : 'complete'} value {searchValue}:
-            </h3>
-            <div className="grid grid-cols-3 gap-2">
-              {valueSearchResults.map((word, index) => (
-                <div key={index} className="p-2 bg-white/5 rounded">
-                  {word}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

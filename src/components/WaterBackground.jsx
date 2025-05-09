@@ -3,18 +3,9 @@ import React, { useState, useEffect } from 'react';
 // Enhanced Water Background Component with performance toggle
 const WaterBackground = () => {
   // State to track performance mode (true = lite mode, false = full effects)
-  const [liteMode, setLiteMode] = useState(false);
+  // Start in performance mode by default
+  const [liteMode, setLiteMode] = useState(true);
   
-  // Check if device is likely a mobile/low-power device on initial render
-  useEffect(() => {
-    // Simple detection for mobile devices
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    // Set lite mode by default on mobile
-    if (isMobile) {
-      setLiteMode(true);
-    }
-  }, []);
-
   return (
     <>
       {/* Performance Toggle Button */}
@@ -61,47 +52,25 @@ const WaterBackground = () => {
           ))}
         </div>
 
-        {/* Enhanced water effect - reduced in lite mode */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-400/5 to-blue-600/5">
-          {/* Dot pattern - fewer in lite mode */}
-          {[...Array(liteMode ? 1 : 4)].map((_, index) => (
-            <div
-              key={index}
-              className="absolute inset-0"
-              style={{
-                animation: liteMode 
-                  ? `water ${60 + index * 20}s linear infinite` // Slower in lite mode
-                  : `water ${25 + index * 7}s linear infinite, levitate ${8 + index * 2}s ease-in-out infinite alternate`,
-                animationDelay: `${-index * 5}s`,
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23FFFFFF' fill-opacity='${liteMode ? 0.15 : 0.3 - index * 0.05}' fill-rule='evenodd'/%3E%3C/svg%3E")`,
-                opacity: liteMode ? 0.35 : 0.95 - index * 0.15,
-                transform: liteMode ? 'translateZ(0)' : `translateZ(${index * 10}px)`,
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Occasional glossy shine effect - present in both modes */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div
-            className="absolute -inset-full"
-            style={{
-              background: `linear-gradient(
-                45deg,
-                transparent 0%,
-                rgba(255, 255, 255, 0.03) 30%,
-                rgba(255, 255, 255, ${liteMode ? '0.08' : '0.15'}) 45%,
-                rgba(255, 255, 255, ${liteMode ? '0.03' : '0.07'}) 60%,
-                transparent 100%
-              )`,
-              animation: `glossyShine ${liteMode ? '12s' : '8s'} linear infinite`,
-              animationDelay: '-2s',
-              width: '200%',
-              height: '200%',
-              willChange: 'transform', // Optimization for animation
-            }}
-          />
-        </div>
+        {/* Enhanced water effect with dot pattern - only in full effects mode */}
+        {!liteMode && (
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-400/5 to-blue-600/5">
+            {/* Dot pattern */}
+            {[...Array(4)].map((_, index) => (
+              <div
+                key={index}
+                className="absolute inset-0"
+                style={{
+                  animation: `water ${25 + index * 7}s linear infinite, levitate ${8 + index * 2}s ease-in-out infinite alternate`,
+                  animationDelay: `${-index * 5}s`,
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23FFFFFF' fill-opacity='${0.3 - index * 0.05}' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+                  opacity: 0.95 - index * 0.15,
+                  transform: `translateZ(${index * 10}px)`,
+                }}
+              />
+            ))}
+          </div>
+        )}
 
         {/* Light ray emitting dots - reduced in lite mode, but still present */}
         {[...Array(liteMode ? 10 : 25)].map((_, index) => (
@@ -184,16 +153,6 @@ const WaterBackground = () => {
           @keyframes glowLineSweep {
             0%, 100% { transform: translateX(-110%) rotate(5deg); }
             50% { transform: translateX(110%) rotate(5deg); }
-          }
-          
-          @keyframes glossyShine {
-            0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
-            50% { transform: translate(50%, 50%) rotate(25deg); }
-          }
-          
-          @keyframes shimmer {
-            0% { transform: translateX(-100%) translateY(-100%); }
-            100% { transform: translateX(100%) translateY(100%); }
           }
           
           @keyframes levitate {
