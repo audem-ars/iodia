@@ -14,56 +14,56 @@ const StateSelector = () => {
 
   // US States admission dates
   const stateData = {
-    'delaware': { year: 1787, note: 'First state to ratify the Constitution' },
-    'pennsylvania': { year: 1787, note: 'Second state to ratify the Constitution' },
-    'new jersey': { year: 1787, note: 'Third state to ratify the Constitution' },
-    'georgia': { year: 1788, note: 'Fourth state to ratify the Constitution' },
-    'connecticut': { year: 1788, note: 'Fifth state to ratify the Constitution' },
-    'massachusetts': { year: 1788, note: 'Sixth state to ratify the Constitution' },
-    'maryland': { year: 1788, note: 'Seventh state to ratify the Constitution' },
-    'south carolina': { year: 1788, note: 'Eighth state to ratify the Constitution' },
-    'new hampshire': { year: 1788, note: 'Ninth state to ratify the Constitution' },
-    'virginia': { year: 1788, note: 'Tenth state to ratify the Constitution' },
-    'new york': { year: 1788, note: 'Eleventh state to ratify the Constitution' },
-    'north carolina': { year: 1789, note: 'Twelfth state to ratify the Constitution' },
-    'rhode island': { year: 1790, note: 'Last of the original 13 states to ratify' },
-    'vermont': { year: 1791, note: 'First state admitted after the original 13' },
-    'kentucky': { year: 1792, note: 'First western state' },
-    'tennessee': { year: 1796, note: 'First state carved from a territory' },
-    'ohio': { year: 1803, note: 'First state from the Northwest Territory' },
-    'louisiana': { year: 1812, note: 'First state from the Louisiana Purchase' },
-    'indiana': { year: 1816, note: 'Second state from Northwest Territory' },
-    'mississippi': { year: 1817, note: 'From Mississippi Territory' },
-    'illinois': { year: 1818, note: 'Third state from Northwest Territory' },
-    'alabama': { year: 1819, note: 'From Alabama Territory' },
-    'maine': { year: 1820, note: 'Part of Massachusetts until 1820' },
-    'missouri': { year: 1821, note: 'Part of the Missouri Compromise' },
-    'arkansas': { year: 1836, note: 'From Arkansas Territory' },
-    'michigan': { year: 1837, note: 'Fourth state from Northwest Territory' },
-    'florida': { year: 1845, note: 'From Spanish territory' },
-    'texas': { year: 1845, note: 'Previously an independent republic' },
-    'iowa': { year: 1846, note: 'From Iowa Territory' },
-    'wisconsin': { year: 1848, note: 'Last state from Northwest Territory' },
-    'california': { year: 1850, note: 'Part of Mexican Cession' },
-    'minnesota': { year: 1858, note: 'From Minnesota Territory' },
-    'oregon': { year: 1859, note: 'From Oregon Territory' },
-    'kansas': { year: 1861, note: 'From Kansas Territory' },
-    'west virginia': { year: 1863, note: 'Separated from Virginia during Civil War' },
-    'nevada': { year: 1864, note: 'During the Civil War' },
-    'nebraska': { year: 1867, note: 'After the Civil War' },
-    'colorado': { year: 1876, note: 'The Centennial State' },
-    'north dakota': { year: 1889, note: 'Split from Dakota Territory' },
-    'south dakota': { year: 1889, note: 'Split from Dakota Territory' },
-    'montana': { year: 1889, note: 'From Montana Territory' },
-    'washington': { year: 1889, note: 'From Washington Territory' },
-    'idaho': { year: 1890, note: 'From Idaho Territory' },
-    'wyoming': { year: 1890, note: 'From Wyoming Territory' },
-    'utah': { year: 1896, note: 'From Utah Territory' },
-    'oklahoma': { year: 1907, note: 'Combined Indian and Oklahoma Territories' },
-    'new mexico': { year: 1912, note: 'From New Mexico Territory' },
-    'arizona': { year: 1912, note: 'Last of continental states admitted' },
-    'alaska': { year: 1959, note: 'First non-continental state' },
-    'hawaii': { year: 1959, note: 'Most recent state admitted' }
+    'delaware': { year: 1787, note: 'First' },
+    'pennsylvania': { year: 1787, note: 'Second' },
+    'new jersey': { year: 1787, note: 'Third' },
+    'georgia': { year: 1788, note: 'Fourth' },
+    'connecticut': { year: 1788, note: 'Fifth' },
+    'massachusetts': { year: 1788, note: 'Sixth' },
+    'maryland': { year: 1788, note: 'Seventh' },
+    'south carolina': { year: 1788, note: 'Eighth' },
+    'new hampshire': { year: 1788, note: 'Ninth' },
+    'virginia': { year: 1788, note: 'Tenth' },
+    'new york': { year: 1788, note: 'Eleventh' },
+    'north carolina': { year: 1789, note: 'Twelfth' },
+    'rhode island': { year: 1790, note: 'Thirteenth' }, // 13th State
+    'vermont': { year: 1791, note: 'Fourteenth' }, // 14th State
+    'kentucky': { year: 1792, note: 'Fifteenth' }, // 15th State
+    'tennessee': { year: 1796, note: 'Sixteenth' }, // 16th State
+    'ohio': { year: 1803, note: 'Seventeenth' }, // 17th State
+    'louisiana': { year: 1812, note: 'Eighteenth' }, // 18th State
+    'indiana': { year: 1816, note: 'Nineteenth' }, // 19th State
+    'mississippi': { year: 1817, note: 'Twentieth' }, // 20th State
+    'illinois': { year: 1818, note: 'Twenty-first' }, // 21st State
+    'alabama': { year: 1819, note: 'Twenty-second' }, // 22nd State
+    'maine': { year: 1820, note: 'Twenty-third' }, // 23rd State
+    'missouri': { year: 1821, note: 'Twenty-fourth' }, // 24th State
+    'arkansas': { year: 1836, note: 'Twenty-fifth' }, // 25th State
+    'michigan': { year: 1837, note: 'Twenty-sixth' }, // 26th State
+    'florida': { year: 1845, note: 'Twenty-seventh' }, // 27th State
+    'texas': { year: 1845, note: 'Twenty-eighth' }, // 28th State
+    'iowa': { year: 1846, note: 'Twenty-ninth' }, // 29th State
+    'wisconsin': { year: 1848, note: 'Thirtieth' }, // 30th State
+    'california': { year: 1850, note: 'Thirty-first' }, // 31st State
+    'minnesota': { year: 1858, note: 'Thirty-second' }, // 32nd State
+    'oregon': { year: 1859, note: 'Thirty-third' }, // 33rd State
+    'kansas': { year: 1861, note: 'Thirty-fourth' }, // 34th State
+    'west virginia': { year: 1863, note: 'Thirty-fifth' }, // 35th State
+    'nevada': { year: 1864, note: 'Thirty-sixth' }, // 36th State
+    'nebraska': { year: 1867, note: 'Thirty-seventh' }, // 37th State
+    'colorado': { year: 1876, note: 'Thirty-eighth' }, // 38th State
+    'north dakota': { year: 1889, note: 'Thirty-ninth' }, // 39th State
+    'south dakota': { year: 1889, note: 'Fortieth' }, // 40th State
+    'montana': { year: 1889, note: 'Forty-first' }, // 41st State
+    'washington': { year: 1889, note: 'Forty-second' }, // 42nd State
+    'idaho': { year: 1890, note: 'Forty-third' }, // 43rd State
+    'wyoming': { year: 1890, note: 'Forty-fourth' }, // 44th State
+    'utah': { year: 1896, note: 'Forty-fifth' }, // 45th State
+    'oklahoma': { year: 1907, note: 'Forty-sixth' }, // 46th State
+    'new mexico': { year: 1912, note: 'Forty-seventh' }, // 47th State
+    'arizona': { year: 1912, note: 'Forty-eighth' }, // 48th State
+    'alaska': { year: 1959, note: 'Forty-ninth' }, // 49th State
+    'hawaii': { year: 1959, note: 'Fiftieth' } // 50th State
   };
 
   // Get zodiac sign for each state

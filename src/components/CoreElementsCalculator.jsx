@@ -1459,18 +1459,142 @@ const [expandedSection, setExpandedSection] = useState(null);
       )}
       {/* MODIFIERS SECTION END */}
 
-      {/* --- NEW JSX CARDS START HERE --- */}
-      {results.lifePath !== null && (
-      <>
-          {/* Core Synthesis Analysis Card - IMPROVED VERSION WITH COLLAPSIBLE SECTIONS */}
+      {/* --- IMPROVED JSX CARDS WITH DIRECT SECTION OPENING --- */}
+{results.lifePath !== null && (
+<>
+{/* Core Synthesis Analysis Card - IMPROVED VERSION WITH DIRECT OPENING */}
 <div className="bg-white/20 backdrop-blur-md rounded-lg p-6 shadow-lg relative group overflow-hidden mt-8">
   <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-red-500/10 transform scale-95 group-hover:scale-100 transition-transform duration-300"></div>
   <div className="relative">
-    <h3 className="text-xl font-bold mb-2 text-gray-800">Core Synthesis Analysis</h3>
-    <p className="text-gray-600 mb-4">This analysis examines how your core elements interact with each other, showing harmony, effectiveness, and special patterns that shape your development.</p>
+    <h3 className="text-xl font-bold mb-4 text-gray-800">Core Synthesis Analysis</h3>
+    <p className="text-gray-600 mb-6">This analysis examines how your core elements interact with each other, showing harmony, effectiveness, and special patterns that shape your development.</p>
     
-    {/* Repeated Numbers - Collapsible */}
-    <div className="mb-6 border border-gray-200/30 rounded-lg overflow-hidden">
+    {/* Summary grid with direct section opening */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      {/* Repeated Numbers Summary - Opens Repeated Numbers Section Directly */}
+      <div 
+        className="bg-white/40 rounded-lg p-4 cursor-pointer hover:shadow-md transition-all"
+        onClick={() => {
+          // Set this section to be expanded and scroll to it
+          setExpandedSection('repeatedNumbers');
+          // Find and scroll to the repeated numbers section
+          const repeatedNumbersSection = document.getElementById('repeatedNumbers-section');
+          if (repeatedNumbersSection) {
+            repeatedNumbersSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }}
+      >
+        <div className="flex justify-between items-center mb-2">
+          <h4 className="font-medium text-base">Repeated Numbers</h4>
+          <div className={`text-xs font-semibold px-2 py-0.5 rounded-full ${checkRepeatedCoreNumbers(results).length > 0 ? "bg-yellow-100 text-yellow-800" : "bg-green-100 text-green-800"}`}>
+            {checkRepeatedCoreNumbers(results).length > 0 ? `${checkRepeatedCoreNumbers(results).length} Found` : "Balanced"}
+          </div>
+        </div>
+        <p className="text-sm text-gray-600">
+          {checkRepeatedCoreNumbers(results).length > 0 
+            ? `Number ${checkRepeatedCoreNumbers(results)[0].number} repeats in ${checkRepeatedCoreNumbers(results)[0].elements.join(' and ')}`
+            : "No repeated numbers in your core elements"}
+        </p>
+      </div>
+      
+      {/* Core Aspects Summary - Opens Core Aspects Section Directly */}
+      <div 
+        className="bg-white/40 rounded-lg p-4 cursor-pointer hover:shadow-md transition-all"
+        onClick={() => {
+          // Set this section to be expanded and scroll to it
+          setExpandedSection('coreAspects');
+          // Find and scroll to the core aspects section
+          const coreAspectsSection = document.getElementById('coreAspects-section');
+          if (coreAspectsSection) {
+            coreAspectsSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }}
+      >
+        <div className="flex justify-between items-center mb-2">
+          <h4 className="font-medium text-base">Core Aspects</h4>
+          <div className="flex space-x-1">
+            <span className="text-xs font-semibold px-1.5 py-0.5 rounded-full bg-green-100 text-green-800">{analyzeAspects(results).filter(a => a.harmony === "Harmonious").length}</span>
+            <span className="text-xs font-semibold px-1.5 py-0.5 rounded-full bg-orange-100 text-orange-800">{analyzeAspects(results).filter(a => a.harmony === "Discordant").length}</span>
+            <span className="text-xs font-semibold px-1.5 py-0.5 rounded-full bg-red-100 text-red-800">{analyzeAspects(results).filter(a => a.harmony === "Very Discordant").length}</span>
+          </div>
+        </div>
+        <p className="text-sm text-gray-600">
+          {analyzeAspects(results).filter(a => a.harmony === "Harmonious").length > analyzeAspects(results).filter(a => a.harmony !== "Harmonious").length
+            ? "Mostly harmonious interactions"
+            : analyzeAspects(results).filter(a => a.harmony === "Very Discordant").length > 1
+              ? "Significant conflicts need attention"
+              : "Mixed interactions need integration"}
+        </p>
+      </div>
+      
+      {/* Core Effectiveness Summary - Opens Core Effectiveness Section Directly */}
+      <div 
+        className="bg-white/40 rounded-lg p-4 cursor-pointer hover:shadow-md transition-all"
+        onClick={() => {
+          // Set this section to be expanded and scroll to it
+          setExpandedSection('coreEffectiveness');
+          // Find and scroll to the core effectiveness section
+          const effectivenessSection = document.getElementById('coreEffectiveness-section');
+          if (effectivenessSection) {
+            effectivenessSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }}
+      >
+        <div className="flex justify-between items-center mb-2">
+          <h4 className="font-medium text-base">Effectiveness</h4>
+          <div className="flex space-x-1">
+            <span className="text-xs font-semibold px-1.5 py-0.5 rounded-full bg-green-100 text-green-800">{calculateEffectiveness(results).filter(e => e.effectiveness === "Effective Balance").length}</span>
+            <span className="text-xs font-semibold px-1.5 py-0.5 rounded-full bg-orange-100 text-orange-800">{calculateEffectiveness(results).filter(e => e.effectiveness.includes("outweigh") && !e.effectiveness.includes("Substantially")).length}</span>
+            <span className="text-xs font-semibold px-1.5 py-0.5 rounded-full bg-red-100 text-red-800">{calculateEffectiveness(results).filter(e => e.effectiveness.includes("Substantially")).length}</span>
+          </div>
+        </div>
+        <p className="text-sm text-gray-600">
+          {calculateEffectiveness(results).filter(e => e.effectiveness === "Effective Balance").length === 3
+            ? "All core elements are well-balanced"
+            : calculateEffectiveness(results).filter(e => e.effectiveness.includes("Substantially")).length > 0
+              ? "Some significant imbalances present"
+              : "Mix of balanced and moderate imbalance"}
+        </p>
+      </div>
+      
+      {/* Relative Power Summary - Opens Relative Power Section Directly */}
+      <div 
+        className="bg-white/40 rounded-lg p-4 cursor-pointer hover:shadow-md transition-all"
+        onClick={() => {
+          // Set this section to be expanded and scroll to it
+          setExpandedSection('relativePower');
+          // Find and scroll to the relative power section
+          const relativePowerSection = document.getElementById('relativePower-section');
+          if (relativePowerSection) {
+            relativePowerSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        }}
+      >
+        <div className="flex justify-between items-center mb-2">
+          <h4 className="font-medium text-base">Relative Power</h4>
+          <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800">Hierarchy</span>
+        </div>
+        <div className="space-y-1">
+          <div className="flex items-center justify-between">
+            <span className="text-xs">LP ({results.lifePath})</span>
+            <div className="w-16 h-1.5 bg-gray-200 rounded-full">
+              <div className="bg-indigo-500 h-1.5 rounded-full w-[50%]"></div>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-xs">Exp ({results.expression})</span>
+            <div className="w-16 h-1.5 bg-gray-200 rounded-full">
+              <div className="bg-purple-500 h-1.5 rounded-full w-[30%]"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    {/* Collapsible sections with IDs for direct scrolling */}
+    
+    {/* Repeated Numbers - Collapsible with ID */}
+    <div id="repeatedNumbers-section" className="mb-6 border border-gray-200/30 rounded-lg overflow-hidden">
       <button 
         onClick={() => setExpandedSection(expandedSection === 'repeatedNumbers' ? null : 'repeatedNumbers')}
         className="w-full flex justify-between items-center p-4 bg-amber-50/50 hover:bg-amber-100/50 transition-colors"
@@ -1563,8 +1687,8 @@ const [expandedSection, setExpandedSection] = useState(null);
       )}
     </div>
     
-    {/* Aspects Analysis - Collapsible */}
-    <div className="mb-6 border border-gray-200/30 rounded-lg overflow-hidden">
+    {/* Aspects Analysis - Collapsible with ID */}
+    <div id="coreAspects-section" className="mb-6 border border-gray-200/30 rounded-lg overflow-hidden">
       <button 
         onClick={() => setExpandedSection(expandedSection === 'coreAspects' ? null : 'coreAspects')}
         className="w-full flex justify-between items-center p-4 bg-blue-50/50 hover:bg-blue-100/50 transition-colors"
@@ -1595,7 +1719,7 @@ const [expandedSection, setExpandedSection] = useState(null);
             <p className="mt-2">Master numbers (11, 22) add their own complex dynamics, as they can be expressed at both their higher level or their reduced level (11→2, 22→4).</p>
           </div>
           
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {results.lifePath && analyzeAspects(results).map((aspect, index) => (
               <div 
                 key={index} 
@@ -1625,6 +1749,9 @@ const [expandedSection, setExpandedSection] = useState(null);
                     <p>{results.lifePath} and {results.birthday} {aspect.harmony === "Harmonious" ? "work well together" : aspect.harmony === "Discordant" ? "have some tension" : "strongly conflict"}</p>
                   )}
                 </div>
+                
+                {/* Aspect explanations - unchanged */}
+                {/* ... content preserved from original ... */}
                 
                 {/* Life Path/Expression explanations */}
                 {aspect.pair === "Life Path/Expression" && (
@@ -1724,8 +1851,8 @@ const [expandedSection, setExpandedSection] = useState(null);
       )}
     </div>
     
-    {/* Effectiveness Analysis - Collapsible */}
-    <div className="mb-6 border border-gray-200/30 rounded-lg overflow-hidden">
+    {/* Effectiveness Analysis - Collapsible with ID */}
+    <div id="coreEffectiveness-section" className="mb-6 border border-gray-200/30 rounded-lg overflow-hidden">
       <button 
         onClick={() => setExpandedSection(expandedSection === 'coreEffectiveness' ? null : 'coreEffectiveness')}
         className="w-full flex justify-between items-center p-4 bg-purple-50/50 hover:bg-purple-100/50 transition-colors"
@@ -1756,7 +1883,7 @@ const [expandedSection, setExpandedSection] = useState(null);
             <p className="mt-2">Master numbers (11, 22) add special considerations to these calculations. The more balanced your energies, the more effectively you can express your potential.</p>
           </div>
           
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {results.lifePath && calculateEffectiveness(results).map((effect, index) => (
               <div key={index} className="p-4 bg-purple-50/50 rounded-md">
                 <div className="flex justify-between items-center mb-2">
@@ -1876,8 +2003,8 @@ const [expandedSection, setExpandedSection] = useState(null);
       )}
     </div>
     
-    {/* Relative Power Visual - Collapsible */}
-    <div className="mb-6 border border-gray-200/30 rounded-lg overflow-hidden">
+    {/* Relative Power Visual - Collapsible with ID */}
+    <div id="relativePower-section" className="mb-6 border border-gray-200/30 rounded-lg overflow-hidden">
       <button 
         onClick={() => setExpandedSection(expandedSection === 'relativePower' ? null : 'relativePower')}
         className="w-full flex justify-between items-center p-4 bg-indigo-50/50 hover:bg-indigo-100/50 transition-colors"
@@ -1897,48 +2024,56 @@ const [expandedSection, setExpandedSection] = useState(null);
         <div className="p-4">
           <p className="mb-3">This shows the influence each element has on your overall numerology profile. The Life Path always has the strongest influence (50%), followed by Expression (30%), Soul Urge (20%), and Birthday (10%).</p>
           
-          <div className="flex items-center justify-center mb-3">
-            <div className="w-1/2 bg-gray-200 rounded-full h-4">
-              <div className="bg-indigo-500 h-4 rounded-full" style={{width: '50%'}}></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="min-w-32">Life Path ({results.lifePath})</span>
+                <div className="w-full bg-gray-200 rounded-full h-4">
+                  <div className="bg-indigo-500 h-4 rounded-full" style={{width: '50%'}}></div>
+                </div>
+                <span className="ml-2 min-w-12 text-right">50%</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="min-w-32">Expression ({results.expression})</span>
+                <div className="w-full bg-gray-200 rounded-full h-4">
+                  <div className="bg-purple-500 h-4 rounded-full" style={{width: '30%'}}></div>
+                </div>
+                <span className="ml-2 min-w-12 text-right">30%</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="min-w-32">Soul Urge ({results.soulUrge})</span>
+                <div className="w-full bg-gray-200 rounded-full h-4">
+                  <div className="bg-blue-500 h-4 rounded-full" style={{width: '20%'}}></div>
+                </div>
+                <span className="ml-2 min-w-12 text-right">20%</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="min-w-32">Birthday ({results.birthday})</span>
+                <div className="w-full bg-gray-200 rounded-full h-4">
+                  <div className="bg-teal-500 h-4 rounded-full" style={{width: '10%'}}></div>
+                </div>
+                <span className="ml-2 min-w-12 text-right">10%</span>
+              </div>
             </div>
-            <span className="ml-2">Life Path (50%): Main life lesson and central focus</span>
-          </div>
-          <div className="flex items-center justify-center mb-3">
-            <div className="w-1/2 bg-gray-200 rounded-full h-4">
-              <div className="bg-purple-500 h-4 rounded-full" style={{width: '30%'}}></div>
+            
+            <div className="p-3 bg-indigo-100/50 rounded-md">
+              <p className="font-medium">What this means for you:</p>
+              <p className="mt-1">When core elements have different energies, the more powerful elements will have a stronger influence on your life:</p>
+              <ul className="list-disc pl-5 mt-2 space-y-1">
+                <li>Your Life Path number ({results.lifePath}) exerts the strongest influence on your development</li>
+                <li>Your Expression ({results.expression}) provides abilities to support your Life Path</li>
+                <li>Your Soul Urge ({results.soulUrge}) adds motivation and inner desires</li>
+                <li>Your Birthday ({results.birthday}) contributes a special talent or sub-focus</li>
+              </ul>
+              <p className="mt-2">Remember: When harmonizing conflicting energies, it's usually most effective to adapt the less powerful elements to align with the more powerful ones.</p>
             </div>
-            <span className="ml-2">Expression (30%): Natural abilities and talents</span>
-          </div>
-          <div className="flex items-center justify-center mb-3">
-            <div className="w-1/2 bg-gray-200 rounded-full h-4">
-              <div className="bg-blue-500 h-4 rounded-full" style={{width: '20%'}}></div>
-            </div>
-            <span className="ml-2">Soul Urge (20%): Inner motivations and desires</span>
-          </div>
-          <div className="flex items-center justify-center">
-            <div className="w-1/2 bg-gray-200 rounded-full h-4">
-              <div className="bg-teal-500 h-4 rounded-full" style={{width: '10%'}}></div>
-            </div>
-            <span className="ml-2">Birthday (10%): Special talent or sub-focus</span>
-          </div>
-          
-          <div className="mt-4 p-3 bg-indigo-100/50 rounded-md">
-            <p className="font-medium">What this means for you:</p>
-            <p className="mt-1">When core elements have different energies, the more powerful elements will have a stronger influence on your life:</p>
-            <ul className="list-disc pl-5 mt-2 space-y-1">
-              <li>Your Life Path number ({results.lifePath}) exerts the strongest influence on your development</li>
-              <li>Your Expression ({results.expression}) provides abilities to support your Life Path</li>
-              <li>Your Soul Urge ({results.soulUrge}) adds motivation and inner desires</li>
-              <li>Your Birthday ({results.birthday}) contributes a special talent or sub-focus</li>
-            </ul>
-            <p className="mt-2">Remember: When harmonizing conflicting energies, it's usually most effective to adapt the less powerful elements to align with the more powerful ones.</p>
           </div>
         </div>
       )}
     </div>
     
-    {/* Overall Synthesis Summary - Collapsible */}
-    <div className="mb-6 border border-gray-200/30 rounded-lg overflow-hidden">
+    {/* Overall Synthesis Summary - Collapsible with ID */}
+    <div id="synthesisSummary-section" className="mb-6 border border-gray-200/30 rounded-lg overflow-hidden">
       <button 
         onClick={() => setExpandedSection(expandedSection === 'synthesisSummary' ? null : 'synthesisSummary')}
         className="w-full flex justify-between items-center p-4 bg-green-50/50 hover:bg-green-100/50 transition-colors"
@@ -2000,7 +2135,7 @@ const [expandedSection, setExpandedSection] = useState(null);
               </div>
               
               {/* Special Considerations */}
-              <div className="space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* Repeated Numbers */}
                 {checkRepeatedCoreNumbers(results).length > 0 && (
                   <div className="p-3 bg-yellow-50/50 rounded-md">
@@ -2061,35 +2196,35 @@ const [expandedSection, setExpandedSection] = useState(null);
   </div>
 </div>
 
-          {/* Directing Modifiers Explanation Card */}
-          <div className="bg-white/20 backdrop-blur-md rounded-lg p-6 shadow-lg relative group overflow-hidden mt-6">
-            <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-purple-500/10 transform scale-95 group-hover:scale-100 transition-transform duration-300"></div>
-            <div className="relative">
-              <h3 className="text-xl font-bold mb-2 text-gray-800">Directing Modifiers</h3>
-              <p className="text-gray-600 mb-4">These special modifiers (First Letter, First Vowel, and Temperament) direct how your other energies are expressed.</p>
+{/* Directing Modifiers Explanation Card */}
+<div className="bg-white/20 backdrop-blur-md rounded-lg p-6 shadow-lg relative group overflow-hidden mt-6">
+  <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-purple-500/10 transform scale-95 group-hover:scale-100 transition-transform duration-300"></div>
+  <div className="relative">
+    <h3 className="text-xl font-bold mb-2 text-gray-800">Directing Modifiers</h3>
+    <p className="text-gray-600 mb-4">These special modifiers (First Letter, First Vowel, and Temperament) direct how your other energies are expressed.</p>
 
-              <div className="p-4 bg-white/30 backdrop-blur-sm rounded-md text-gray-700">
-                <p className="mb-3">While other modifiers add or subtract energy from your core, Directing Modifiers determine how you use the energy you have.</p>
-                
-                <p className="mb-3">Your approach to experience, based on your First Letter and First Vowel, can:</p>
-                <ul className="list-disc pl-5 mb-3">
-                  <li><strong>Limit</strong> your development by restricting your energy expression</li>
-                  <li><strong>Stabilize</strong> your development by providing balance</li>
-                  <li><strong>Enhance</strong> your development by amplifying positive energies</li>
-                </ul>
-                
-                <p className="mb-3">Your Temperament acts as a filter for your energies:</p>
-                <ul className="list-disc pl-5">
-                  <li><strong>Strong components</strong> allow those energies to be fully expressed</li>
-                  <li><strong>Weak components</strong> block or minimize those energies</li>
-                  <li><strong>Average components</strong> permit moderate expression of those energies</li>
-                </ul>
-              </div>
-            </div>
-          </div>
+    <div className="p-4 bg-white/30 backdrop-blur-sm rounded-md text-gray-700">
+      <p className="mb-3">While other modifiers add or subtract energy from your core, Directing Modifiers determine how you use the energy you have.</p>
+      
+      <p className="mb-3">Your approach to experience, based on your First Letter and First Vowel, can:</p>
+      <ul className="list-disc pl-5 mb-3">
+        <li><strong>Limit</strong> your development by restricting your energy expression</li>
+        <li><strong>Stabilize</strong> your development by providing balance</li>
+        <li><strong>Enhance</strong> your development by amplifying positive energies</li>
+      </ul>
+      
+      <p className="mb-3">Your Temperament acts as a filter for your energies:</p>
+      <ul className="list-disc pl-5">
+        <li><strong>Strong components</strong> allow those energies to be fully expressed</li>
+        <li><strong>Weak components</strong> block or minimize those energies</li>
+        <li><strong>Average components</strong> permit moderate expression of those energies</li>
+      </ul>
+    </div>
+  </div>
+</div>
         </>
       )}
-      {/* --- NEW JSX CARDS END HERE --- */}
+      {/* --- IMPROVED JSX CARDS END HERE --- */}
 
 
       {/* Calculation Explanations Section */}

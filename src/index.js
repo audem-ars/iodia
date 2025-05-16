@@ -5,6 +5,7 @@ import App from './App';
 import SecondApp from './components/numerologyCalculator/SecondApp';
 import YourNumberPage from './components/YourNumberPage';
 import CompatabilityPage from './components/CompatabilityPage'; // Note the 'a' spelling
+import NumerologyReferenceApp from './components/NumerologyReferenceApp'; // Import the numerology reference component
 import { register } from './ServiceWorker';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -18,7 +19,8 @@ root.render(
         <Route path="/" element={<App />} />
         <Route path="/galaxy" element={<SecondApp />} />
         <Route path="/your-number" element={<YourNumberPage />} />
-        <Route path="/compatibility" element={<CompatabilityPage />} /> {/* Make sure JSX tag matches import name */}
+        <Route path="/compatibility" element={<CompatabilityPage />} />
+        <Route path="/numerology-reference" element={<NumerologyReferenceApp />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
