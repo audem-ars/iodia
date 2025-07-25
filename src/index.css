@@ -38,3 +38,90 @@ body {
 body {
   background-color: transparent !important;
 }
+
+/* ===== TEXT COLOR OVERRIDES ===== */
+
+/* Make small gray text black with gold glow */
+.text-gray-700 {
+  color: #000000 !important;
+  text-shadow: 0 0 8px #ffd700, 0 0 12px #ffd700, 0 0 16px #ffd700;
+}
+
+.text-gray-600 {
+  color: #000000 !important;
+  text-shadow: 0 0 8px #ffd700, 0 0 12px #ffd700, 0 0 16px #ffd700;
+}
+
+.text-gray-800 {
+  color: #000000 !important;
+  text-shadow: 0 0 8px #ffd700, 0 0 12px #ffd700, 0 0 16px #ffd700;
+}
+
+.text-gray-500 {
+  color: #000000 !important;
+  text-shadow: 0 0 8px #ffd700, 0 0 12px #ffd700, 0 0 16px #ffd700;
+}
+
+.text-gray-900 {
+  color: #000000 !important;
+  text-shadow: 0 0 8px #ffd700, 0 0 12px #ffd700, 0 0 16px #ffd700;
+}
+
+/* Make sky blue titles FIRE RED */
+.text-sky-700,
+.text-sky-600,
+.text-sky-800,
+.text-sky-500,
+.text-sky-900 {
+  color: #ff2020 !important;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Keep other blue titles white blue */
+.text-blue-700,
+.text-blue-800,
+.text-blue-600,
+.text-blue-500,
+.text-blue-900,
+.text-blue-400,
+.text-blue-300,
+.text-indigo-700,
+.text-indigo-800,
+.text-indigo-600,
+.text-indigo-500,
+.text-indigo-900,
+.text-indigo-400,
+.text-indigo-300,
+.text-slate-700,
+.text-slate-600,
+.text-slate-800,
+.text-slate-900 {
+  color: #ff2020 !important;
+  text-shadow: 0 0 6px #000000, 0 0 10px #000000, 0 0 14px #000000;
+}
+
+/* DON'T touch orange titles - leave them as is */
+.text-orange-500,
+.text-orange-600,
+.text-orange-700,
+.text-amber-500,
+.text-amber-600,
+.text-yellow-500,
+.text-yellow-600 {
+  text-shadow: none !important;
+}
+
+/* Keep other vibrant colors as they are */
+.text-green-600, .text-red-600, .text-purple-500, .text-pink-500, .text-cyan-500 {
+  text-shadow: none !important;
+}
+
+/* Light shadow for body text */
+p {
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2) !important;
+}
+
+/* Light shadow for list items */
+li {
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2) !important;
+}
