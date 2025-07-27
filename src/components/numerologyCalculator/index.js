@@ -48,6 +48,39 @@ const NumerologyCalculator = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Capital letter values (A=27, B=28, ..., Z=52)
+  const getCapitalLetterValue = (letter) => {
+    if (letter >= 'A' && letter <= 'Z') {
+      return letter.charCodeAt(0) - 'A'.charCodeAt(0) + 27;
+    }
+    return 0;
+  };
+
+  // Case-sensitive calculation with both full and reduced capital values
+  const calculateCaseSensitiveValue = (text) => {
+    return text.split('').reduce((sum, char) => {
+      if (char >= 'A' && char <= 'Z') {
+        return sum + getCapitalLetterValue(char);
+      } else if (char >= 'a' && char <= 'z') {
+        return sum + calculateValue(char);
+      }
+      return sum; // spaces and other chars = 0
+    }, 0);
+  };
+
+  // Case-sensitive calculation using REDUCED capital values
+  const calculateCaseSensitiveReducedCapitals = (text) => {
+    return text.split('').reduce((sum, char) => {
+      if (char >= 'A' && char <= 'Z') {
+        const fullValue = getCapitalLetterValue(char);
+        return sum + getFinalValue(fullValue); // Use reduced value for capitals
+      } else if (char >= 'a' && char <= 'z') {
+        return sum + calculateValue(char);
+      }
+      return sum; // spaces and other chars = 0
+    }, 0);
+  };
+
   // Helper function to detect master/repeated numbers
   const isMasterOrRepeatedNumber = (num) => {
     const str = num.toString();
@@ -57,11 +90,21 @@ const NumerologyCalculator = () => {
 
   // Function to get final value respecting master numbers
   const getFinalValue = (value) => {
-    // Master numbers stay as master numbers, don't reduce
-    if (isMasterOrRepeatedNumber(value)) {
-      return value;
+    let current = value;
+    
+    while (current > 9) {
+      // Calculate reduction
+      const digits = current.toString().split('').map(Number);
+      const sum = digits.reduce((acc, digit) => acc + digit, 0);
+      current = sum;
+      
+      // If we hit a master number during reduction, stop there
+      if (isMasterOrRepeatedNumber(current)) {
+        return current;
+      }
     }
-    return reduceToSingleDigit(value);
+    
+    return current;
   };
 
   // Enhanced reduction function that shows master numbers
@@ -70,17 +113,17 @@ const NumerologyCalculator = () => {
     let current = value;
     
     while (current > 9) {
-      if (isMasterOrRepeatedNumber(current)) {
-        steps.push({ value: current, isMaster: true, isFinal: true });
-        return steps; // Stop here, don't reduce master numbers further
-      }
-      
       // Calculate next reduction step
       const digits = current.toString().split('').map(Number);
       const sum = digits.reduce((acc, digit) => acc + digit, 0);
       
       if (sum !== current) {
         current = sum;
+        // Check if this new sum is a master number
+        if (isMasterOrRepeatedNumber(current)) {
+          steps.push({ value: current, isMaster: true, isFinal: true });
+          return steps; // Stop here, don't reduce master numbers further
+        }
       } else {
         break;
       }
@@ -101,44 +144,106 @@ const NumerologyCalculator = () => {
     let individualWordResults = [];
     if (isMultipleWords) {
       individualWordResults = words.map(singleWord => {
-        const completeValue = calculateValue(singleWord, false);
-        const finalValue = getFinalValue(completeValue);
-        const reductionSteps = getReductionSteps(completeValue);
+        // Case-sensitive calculation
+        const caseSensitiveValue = calculateCaseSensitiveValue(singleWord);
+        const caseSensitiveFinal = getFinalValue(caseSensitiveValue);
+        const caseSensitiveSteps = getReductionSteps(caseSensitiveValue);
+        
+        // Traditional calculation
+        const traditionalValue = calculateValue(singleWord, false);
+        const traditionalFinal = getFinalValue(traditionalValue);
+        const traditionalSteps = getReductionSteps(traditionalValue);
+        
         return {
           word: singleWord,
-          completeValue,
-          reducedValue: finalValue,
-          reductionSteps
+          caseSensitive: {
+            completeValue: caseSensitiveValue,
+            reducedValue: caseSensitiveFinal,
+            reductionSteps: caseSensitiveSteps
+          },
+          traditional: {
+            completeValue: traditionalValue,
+            reducedValue: traditionalFinal,
+            reductionSteps: traditionalSteps
+          }
         };
       });
     }
     
-    // Calculate total values (existing functionality)
-    const completeValue = calculateValue(word, false);
-    const reducedValue = getFinalValue(completeValue);
-    const totalReductionSteps = getReductionSteps(completeValue);
+    // Calculate total values for both systems
+    const caseSensitiveCompleteValue = calculateCaseSensitiveValue(word);
+    const caseSensitiveReducedValue = getFinalValue(caseSensitiveCompleteValue);
+    const caseSensitiveReductionSteps = getReductionSteps(caseSensitiveCompleteValue);
     
-    // Calculate the sum of reduced values and its reduction steps for multiple words
-    let reducedValueSum = null;
-    let reducedValueSumSteps = [];
+    // ALSO calculate case-sensitive with reduced capitals
+    const caseSensitiveReducedCapitalsValue = calculateCaseSensitiveReducedCapitals(word);
+    const caseSensitiveReducedCapitalsFinal = getFinalValue(caseSensitiveReducedCapitalsValue);
+    const caseSensitiveReducedCapitalsSteps = getReductionSteps(caseSensitiveReducedCapitalsValue);
+    
+    const traditionalCompleteValue = calculateValue(word, false);
+    const traditionalReducedValue = getFinalValue(traditionalCompleteValue);
+    const traditionalReductionSteps = getReductionSteps(traditionalCompleteValue);
+    
+    // Calculate letter breakdowns for both systems
+    const caseSensitiveLetterBreakdown = word.split('').map(letter => ({
+      letter,
+      value: letter >= 'A' && letter <= 'Z' ? getCapitalLetterValue(letter) : 
+             letter >= 'a' && letter <= 'z' ? calculateValue(letter) : 0
+    }));
+    
+    // ALSO calculate breakdown with reduced capitals
+    const caseSensitiveReducedCapitalsBreakdown = word.split('').map(letter => ({
+      letter,
+      value: letter >= 'A' && letter <= 'Z' ? getFinalValue(getCapitalLetterValue(letter)) : 
+             letter >= 'a' && letter <= 'z' ? calculateValue(letter) : 0
+    }));
+    
+    const traditionalLetterBreakdown = word.toLowerCase().split('').map(letter => ({
+      letter,
+      value: calculateValue(letter)
+    }));
+    
+    // Calculate reduced value sums for multiple words
+    let caseSensitiveReducedSum = null;
+    let caseSensitiveReducedSumSteps = [];
+    let traditionalReducedSum = null;
+    let traditionalReducedSumSteps = [];
+    
     if (isMultipleWords && individualWordResults.length > 0) {
-      reducedValueSum = individualWordResults.reduce((sum, wordResult) => sum + wordResult.reducedValue, 0);
-      reducedValueSumSteps = getReductionSteps(reducedValueSum);
+      caseSensitiveReducedSum = individualWordResults.reduce((sum, wordResult) => sum + wordResult.caseSensitive.reducedValue, 0);
+      caseSensitiveReducedSumSteps = getReductionSteps(caseSensitiveReducedSum);
+      
+      traditionalReducedSum = individualWordResults.reduce((sum, wordResult) => sum + wordResult.traditional.reducedValue, 0);
+      traditionalReducedSumSteps = getReductionSteps(traditionalReducedSum);
     }
     
     setResults({
       word,
-      letterBreakdown: word.toLowerCase().split('').map(letter => ({
-        letter,
-        value: calculateValue(letter)
-      })),
-      completeValue,
-      reducedValue,
-      totalReductionSteps,
+      caseSensitive: {
+        letterBreakdown: caseSensitiveLetterBreakdown,
+        completeValue: caseSensitiveCompleteValue,
+        reducedValue: caseSensitiveReducedValue,
+        totalReductionSteps: caseSensitiveReductionSteps,
+        reducedValueSum: caseSensitiveReducedSum,
+        reducedValueSumSteps: caseSensitiveReducedSumSteps,
+        // Add the reduced capitals version
+        reducedCapitals: {
+          letterBreakdown: caseSensitiveReducedCapitalsBreakdown,
+          completeValue: caseSensitiveReducedCapitalsValue,
+          reducedValue: caseSensitiveReducedCapitalsFinal,
+          totalReductionSteps: caseSensitiveReducedCapitalsSteps
+        }
+      },
+      traditional: {
+        letterBreakdown: traditionalLetterBreakdown,
+        completeValue: traditionalCompleteValue,
+        reducedValue: traditionalReducedValue,
+        totalReductionSteps: traditionalReductionSteps,
+        reducedValueSum: traditionalReducedSum,
+        reducedValueSumSteps: traditionalReducedSumSteps
+      },
       isMultipleWords,
-      individualWords: individualWordResults,
-      reducedValueSum,
-      reducedValueSumSteps
+      individualWords: individualWordResults
     });
   };
 
@@ -187,6 +292,28 @@ const NumerologyCalculator = () => {
             animation: fireFlicker 2s ease-in-out infinite alternate;
           }
           
+          /* White glow for traditional system */
+          .white-glow {
+            color: #ffffff;
+            text-shadow: 
+              0 0 5px #ffffff,
+              0 0 10px #e0e0e0,
+              0 0 15px #c0c0c0,
+              0 0 20px #a0a0a0;
+            animation: whiteFlicker 2s ease-in-out infinite alternate;
+          }
+          
+          /* Gold glow for capital letters */
+          .gold-glow {
+            color: #ffd700;
+            text-shadow: 
+              0 0 5px #ffd700,
+              0 0 10px #ffaa00,
+              0 0 15px #ff8800,
+              0 0 20px #ff6600;
+            animation: goldFlicker 2.5s ease-in-out infinite alternate;
+          }
+          
           @keyframes fireFlicker {
             0% {
               text-shadow: 
@@ -202,6 +329,42 @@ const NumerologyCalculator = () => {
                 0 0 20px #ff3300,
                 0 0 25px #ff2200,
                 0 0 30px #ff1100;
+            }
+          }
+          
+          @keyframes whiteFlicker {
+            0% {
+              text-shadow: 
+                0 0 5px #ffffff,
+                0 0 10px #e0e0e0,
+                0 0 15px #c0c0c0,
+                0 0 20px #a0a0a0;
+            }
+            100% {
+              text-shadow: 
+                0 0 8px #ffffff,
+                0 0 15px #f0f0f0,
+                0 0 20px #e0e0e0,
+                0 0 25px #d0d0d0,
+                0 0 30px #c0c0c0;
+            }
+          }
+          
+          @keyframes goldFlicker {
+            0% {
+              text-shadow: 
+                0 0 5px #ffd700,
+                0 0 10px #ffaa00,
+                0 0 15px #ff8800,
+                0 0 20px #ff6600;
+            }
+            100% {
+              text-shadow: 
+                0 0 8px #ffd700,
+                0 0 15px #ffcc00,
+                0 0 20px #ffaa00,
+                0 0 25px #ff8800,
+                0 0 30px #ff6600;
             }
           }
         `
@@ -234,112 +397,301 @@ const NumerologyCalculator = () => {
                 {results.isMultipleWords && results.individualWords && results.individualWords.length > 0 && (
                   <div className="mb-6">
                     <h4 className="font-semibold text-lg mb-3 text-white fire-glow">Individual Word Values:</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
-                      {results.individualWords.map((wordResult, index) => (
-                        <div key={index} className="bg-white/10 rounded-lg p-3">
-                          <div className="text-center">
-                            <div className="font-semibold text-white fire-glow mb-2">{wordResult.word}</div>
-                            <div className="text-sm text-cyan-200">
-                              <div>Complete: {wordResult.completeValue}</div>
-                              {/* Show reduction steps for individual words */}
-                              {wordResult.reductionSteps && wordResult.reductionSteps.length > 1 && (
-                                <div className="mt-1 text-xs">
-                                  Reduction: {wordResult.reductionSteps.map((step, stepIndex) => (
-                                    <span key={stepIndex}>
-                                      {step.isMaster ? (
-                                        <span className="text-yellow-300 font-bold">{step.value}</span>
-                                      ) : (
-                                        <span className={step.isFinal ? "text-green-300 font-bold" : ""}>{step.value}</span>
-                                      )}
-                                      {stepIndex < wordResult.reductionSteps.length - 1 && " → "}
-                                    </span>
-                                  ))}
-                                </div>
-                              )}
-                              <div>Final: {wordResult.reducedValue}</div>
+                    
+                    {/* Case-Sensitive Results */}
+                    <div className="mb-4">
+                      <h5 className="font-semibold text-white mb-2 gold-glow">📝 Case-Sensitive (A=27, B=28...)</h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
+                        {results.individualWords.map((wordResult, index) => (
+                          <div key={index} className="bg-white/10 rounded-lg p-3">
+                            <div className="text-center">
+                              <div className="font-semibold text-white gold-glow mb-2">{wordResult.word}</div>
+                              <div className="text-sm text-cyan-200">
+                                <div>Complete: {wordResult.caseSensitive?.completeValue || 0}</div>
+                                {wordResult.caseSensitive?.reductionSteps && wordResult.caseSensitive.reductionSteps.length > 1 && (
+                                  <div className="mt-1 text-xs">
+                                    Reduction: {wordResult.caseSensitive.reductionSteps.map((step, stepIndex) => (
+                                      <span key={stepIndex}>
+                                        {step.isMaster ? (
+                                          <span className="text-yellow-300 font-bold">{step.value}</span>
+                                        ) : (
+                                          <span className={step.isFinal ? "text-green-300 font-bold" : ""}>{step.value}</span>
+                                        )}
+                                        {stepIndex < wordResult.caseSensitive.reductionSteps.length - 1 && " → "}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
+                                <div>Final: {wordResult.caseSensitive?.reducedValue || 0}</div>
+                              </div>
                             </div>
                           </div>
+                        ))}
+                      </div>
+                      
+                      {/* Mathematical breakdown for case-sensitive */}
+                      <div className="bg-white/5 rounded-lg p-3 mb-4">
+                        <div className="text-center text-white">
+                          <div className="mb-2 font-semibold">Complete Values:</div>
+                          <div className="text-cyan-200">
+                            {results.individualWords.map(w => w.caseSensitive?.completeValue || 0).join(' + ')} = {results.caseSensitive?.completeValue || 0}
+                          </div>
+                          <div className="mt-3 font-semibold">Reduced Values:</div>
+                          <div className="text-cyan-200">
+                            {results.individualWords.map(w => w.caseSensitive?.reducedValue || 0).join(' + ')} = {results.caseSensitive?.reducedValueSum || 0}
+                            {results.caseSensitive?.reducedValueSumSteps && results.caseSensitive.reducedValueSumSteps.length > 1 && (
+                              <div className="mt-1 text-sm">
+                                Reduction: {results.caseSensitive.reducedValueSumSteps.map((step, stepIndex) => (
+                                  <span key={stepIndex}>
+                                    {step.isMaster ? (
+                                      <span className="text-yellow-300 font-bold bg-yellow-900/30 px-1 rounded">
+                                        {step.value} ✨
+                                      </span>
+                                    ) : (
+                                      <span className={step.isFinal ? "text-green-300 font-bold" : ""}>{step.value}</span>
+                                    )}
+                                    {stepIndex < results.caseSensitive.reducedValueSumSteps.length - 1 && " → "}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      ))}
+                      </div>
                     </div>
-                    
-                    {/* Mathematical breakdown for multiple words */}
-                    <div className="bg-white/5 rounded-lg p-3 mb-4">
-                      <div className="text-center text-white">
-                        <div className="mb-2 font-semibold">Complete Values:</div>
-                        <div className="text-cyan-200">
-                          {results.individualWords.map(w => w.completeValue).join(' + ')} = {results.completeValue}
-                        </div>
-                        <div className="mt-3 font-semibold">Reduced Values:</div>
-                        <div className="text-cyan-200">
-                          {results.individualWords.map(w => w.reducedValue).join(' + ')} = {results.reducedValueSum}
-                          {results.reducedValueSumSteps && results.reducedValueSumSteps.length > 1 && (
-                            <div className="mt-1 text-sm">
-                              Reduction: {results.reducedValueSumSteps.map((step, stepIndex) => (
-                                <span key={stepIndex}>
-                                  {step.isMaster ? (
-                                    <span className="text-yellow-300 font-bold bg-yellow-900/30 px-1 rounded">
-                                      {step.value} ✨
-                                    </span>
-                                  ) : (
-                                    <span className={step.isFinal ? "text-green-300 font-bold" : ""}>{step.value}</span>
-                                  )}
-                                  {stepIndex < results.reducedValueSumSteps.length - 1 && " → "}
-                                </span>
-                              ))}
+
+                    {/* Traditional Results */}
+                    <div className="mb-4">
+                      <h5 className="font-semibold text-white mb-2 white-glow">📚 Traditional (A=1, B=2...)</h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
+                        {results.individualWords.map((wordResult, index) => (
+                          <div key={index} className="bg-white/10 rounded-lg p-3">
+                            <div className="text-center">
+                              <div className="font-semibold text-white white-glow mb-2">{wordResult.word}</div>
+                              <div className="text-sm text-cyan-200">
+                                <div>Complete: {wordResult.traditional?.completeValue || 0}</div>
+                                {wordResult.traditional?.reductionSteps && wordResult.traditional.reductionSteps.length > 1 && (
+                                  <div className="mt-1 text-xs">
+                                    Reduction: {wordResult.traditional.reductionSteps.map((step, stepIndex) => (
+                                      <span key={stepIndex}>
+                                        {step.isMaster ? (
+                                          <span className="text-yellow-300 font-bold">{step.value}</span>
+                                        ) : (
+                                          <span className={step.isFinal ? "text-green-300 font-bold" : ""}>{step.value}</span>
+                                        )}
+                                        {stepIndex < wordResult.traditional.reductionSteps.length - 1 && " → "}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
+                                <div>Final: {wordResult.traditional?.reducedValue || 0}</div>
+                              </div>
                             </div>
-                          )}
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {/* Mathematical breakdown for traditional */}
+                      <div className="bg-white/5 rounded-lg p-3">
+                        <div className="text-center text-white">
+                          <div className="mb-2 font-semibold">Complete Values:</div>
+                          <div className="text-cyan-200">
+                            {results.individualWords.map(w => w.traditional?.completeValue || 0).join(' + ')} = {results.traditional?.completeValue || 0}
+                          </div>
+                          <div className="mt-3 font-semibold">Reduced Values:</div>
+                          <div className="text-cyan-200">
+                            {results.individualWords.map(w => w.traditional?.reducedValue || 0).join(' + ')} = {results.traditional?.reducedValueSum || 0}
+                            {results.traditional?.reducedValueSumSteps && results.traditional.reducedValueSumSteps.length > 1 && (
+                              <div className="mt-1 text-sm">
+                                Reduction: {results.traditional.reducedValueSumSteps.map((step, stepIndex) => (
+                                  <span key={stepIndex}>
+                                    {step.isMaster ? (
+                                      <span className="text-yellow-300 font-bold bg-yellow-900/30 px-1 rounded">
+                                        {step.value} ✨
+                                      </span>
+                                    ) : (
+                                      <span className={step.isFinal ? "text-green-300 font-bold" : ""}>{step.value}</span>
+                                    )}
+                                    {stepIndex < results.traditional.reducedValueSumSteps.length - 1 && " → "}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* Original Results Section */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="font-semibold text-white mb-2 fire-glow">
-                      {results.isMultipleWords ? 'Combined Letter Breakdown:' : 'Letter Breakdown:'}
+                {/* Original Results Section - Now shows both systems */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Case-Sensitive System */}
+                  <div className="bg-white/5 rounded-lg p-4">
+                    <h4 className="font-semibold text-white mb-3 gold-glow text-center">
+                      📝 Case-Sensitive System
                     </h4>
                     
-                    {/* Show mathematical addition */}
+                    {/* Full Capital Values */}
+                    <div className="mb-4">
+                      <h5 className="text-sm font-semibold text-white gold-glow mb-2">Full Capital Values:</h5>
+                      <div className="mb-3 text-sm text-cyan-200">
+                        <div className="mb-1">
+                          <span className="font-semibold text-white gold-glow">Addition:</span>
+                        </div>
+                        <div className="break-all">
+                          {results.caseSensitive?.letterBreakdown && results.caseSensitive.letterBreakdown.map(({ letter, value }, index) => (
+                            <span key={index}>
+                              {letter === ' ' ? '0' : value}
+                              {index < results.caseSensitive.letterBreakdown.length - 1 && ' + '}
+                            </span>
+                          ))} = {results.caseSensitive?.completeValue || 0}
+                        </div>
+                      </div>
+                      
+                      <div className="max-h-32 overflow-y-auto transparent-scrollbar mb-3">
+                        {results.caseSensitive?.letterBreakdown && results.caseSensitive.letterBreakdown.map(({ letter, value }, index) => (
+                          <div key={index} className="flex justify-between text-white text-sm">
+                            <span className={letter >= 'A' && letter <= 'Z' ? 'gold-glow' : ''}>
+                              {letter === ' ' ? 'SPACE' : letter}
+                              {letter >= 'A' && letter <= 'Z' ? ' (cap)' : ''}
+                            </span>
+                            <span className={letter >= 'A' && letter <= 'Z' ? 'gold-glow' : ''}>{letter === ' ' ? '0' : value}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="mb-2">
+                        <span className="font-semibold text-white">Complete Value:</span> 
+                        <span className="text-cyan-200 ml-2">{results.caseSensitive?.completeValue || 0}</span>
+                      </div>
+                      
+                      {results.caseSensitive?.totalReductionSteps && results.caseSensitive.totalReductionSteps.length > 1 && (
+                        <div className="mb-3">
+                          <span className="font-semibold text-white">Reduction Steps:</span>
+                          <div className="text-sm text-cyan-200 mt-1">
+                            {results.caseSensitive.totalReductionSteps.map((step, stepIndex) => (
+                              <span key={stepIndex}>
+                                {step.isMaster ? (
+                                  <span className="text-yellow-300 font-bold bg-yellow-900/30 px-1 rounded">
+                                    {step.value} ✨
+                                  </span>
+                                ) : (
+                                  <span className={step.isFinal ? "text-green-300 font-bold" : ""}>{step.value}</span>
+                                )}
+                                {stepIndex < results.caseSensitive.totalReductionSteps.length - 1 && " → "}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div className="mb-4">
+                        <span className="font-semibold text-white">Final Value:</span> 
+                        <span className="text-cyan-200 ml-2">{results.caseSensitive?.reducedValue || 0}</span>
+                      </div>
+                    </div>
+
+                    {/* Reduced Capital Values */}
+                    <div className="border-t border-white/20 pt-4">
+                      <h5 className="text-sm font-semibold text-white gold-glow mb-2">With Reduced Capitals:</h5>
+                      <div className="mb-3 text-sm text-cyan-200">
+                        <div className="mb-1">
+                          <span className="font-semibold text-white gold-glow">Addition:</span>
+                        </div>
+                        <div className="break-all">
+                          {results.caseSensitive?.reducedCapitals?.letterBreakdown && results.caseSensitive.reducedCapitals.letterBreakdown.map(({ letter, value }, index) => (
+                            <span key={index}>
+                              {letter === ' ' ? '0' : value}
+                              {index < results.caseSensitive.reducedCapitals.letterBreakdown.length - 1 && ' + '}
+                            </span>
+                          ))} = {results.caseSensitive?.reducedCapitals?.completeValue || 0}
+                        </div>
+                      </div>
+                      
+                      <div className="max-h-32 overflow-y-auto transparent-scrollbar mb-3">
+                        {results.caseSensitive?.reducedCapitals?.letterBreakdown && results.caseSensitive.reducedCapitals.letterBreakdown.map(({ letter, value }, index) => (
+                          <div key={index} className="flex justify-between text-white text-sm">
+                            <span className={letter >= 'A' && letter <= 'Z' ? 'gold-glow' : ''}>
+                              {letter === ' ' ? 'SPACE' : letter}
+                              {letter >= 'A' && letter <= 'Z' ? ' (reduced)' : ''}
+                            </span>
+                            <span className={letter >= 'A' && letter <= 'Z' ? 'gold-glow' : ''}>{letter === ' ' ? '0' : value}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="mb-2">
+                        <span className="font-semibold text-white">Complete Value:</span> 
+                        <span className="text-cyan-200 ml-2">{results.caseSensitive?.reducedCapitals?.completeValue || 0}</span>
+                      </div>
+                      
+                      {results.caseSensitive?.reducedCapitals?.totalReductionSteps && results.caseSensitive.reducedCapitals.totalReductionSteps.length > 1 && (
+                        <div className="mb-3">
+                          <span className="font-semibold text-white">Reduction Steps:</span>
+                          <div className="text-sm text-cyan-200 mt-1">
+                            {results.caseSensitive.reducedCapitals.totalReductionSteps.map((step, stepIndex) => (
+                              <span key={stepIndex}>
+                                {step.isMaster ? (
+                                  <span className="text-yellow-300 font-bold bg-yellow-900/30 px-1 rounded">
+                                    {step.value} ✨
+                                  </span>
+                                ) : (
+                                  <span className={step.isFinal ? "text-green-300 font-bold" : ""}>{step.value}</span>
+                                )}
+                                {stepIndex < results.caseSensitive.reducedCapitals.totalReductionSteps.length - 1 && " → "}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div>
+                        <span className="font-semibold text-white">Final Value:</span> 
+                        <span className="text-cyan-200 ml-2">{results.caseSensitive?.reducedCapitals?.reducedValue || 0}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Traditional System */}
+                  <div className="bg-white/5 rounded-lg p-4">
+                    <h4 className="font-semibold text-white mb-3 white-glow text-center">
+                      📚 Traditional System
+                    </h4>
+                    
                     <div className="mb-3 text-sm text-cyan-200">
                       <div className="mb-1">
-                        <span className="font-semibold text-white fire-glow">Addition:</span>
+                        <span className="font-semibold text-white white-glow">Addition:</span>
                       </div>
                       <div className="break-all">
-                        {results.letterBreakdown && results.letterBreakdown.map(({ letter, value }, index) => (
+                        {results.traditional?.letterBreakdown && results.traditional.letterBreakdown.map(({ letter, value }, index) => (
                           <span key={index}>
                             {letter === ' ' ? '0' : value}
-                            {index < results.letterBreakdown.length - 1 && ' + '}
+                            {index < results.traditional.letterBreakdown.length - 1 && ' + '}
                           </span>
-                        ))} = {results.completeValue}
+                        ))} = {results.traditional?.completeValue || 0}
                       </div>
                     </div>
                     
-                    <div className="max-h-40 overflow-y-auto transparent-scrollbar">
-                      {results.letterBreakdown && results.letterBreakdown.map(({ letter, value }, index) => (
-                        <div key={index} className="flex justify-between text-white">
+                    <div className="max-h-40 overflow-y-auto transparent-scrollbar mb-3">
+                      {results.traditional?.letterBreakdown && results.traditional.letterBreakdown.map(({ letter, value }, index) => (
+                        <div key={index} className="flex justify-between text-white text-sm">
                           <span>{letter === ' ' ? 'SPACE' : letter.toUpperCase()}</span>
                           <span>{letter === ' ' ? '0' : value}</span>
                         </div>
                       ))}
                     </div>
-                  </div>
-                  <div>
+
                     <div className="mb-2">
-                      <span className="font-semibold text-white">
-                        {results.isMultipleWords ? 'Total Complete Value:' : 'Complete Value:'}
-                      </span> 
-                      <span className="text-cyan-200 ml-2">{results.completeValue}</span>
+                      <span className="font-semibold text-white">Complete Value:</span> 
+                      <span className="text-cyan-200 ml-2">{results.traditional?.completeValue || 0}</span>
                     </div>
                     
-                    {/* Show reduction steps for total */}
-                    {results.totalReductionSteps && results.totalReductionSteps.length > 1 && (
+                    {results.traditional?.totalReductionSteps && results.traditional.totalReductionSteps.length > 1 && (
                       <div className="mb-3">
                         <span className="font-semibold text-white">Reduction Steps:</span>
                         <div className="text-sm text-cyan-200 mt-1">
-                          {results.totalReductionSteps.map((step, stepIndex) => (
+                          {results.traditional.totalReductionSteps.map((step, stepIndex) => (
                             <span key={stepIndex}>
                               {step.isMaster ? (
                                 <span className="text-yellow-300 font-bold bg-yellow-900/30 px-1 rounded">
@@ -348,7 +700,7 @@ const NumerologyCalculator = () => {
                               ) : (
                                 <span className={step.isFinal ? "text-green-300 font-bold" : ""}>{step.value}</span>
                               )}
-                              {stepIndex < results.totalReductionSteps.length - 1 && " → "}
+                              {stepIndex < results.traditional.totalReductionSteps.length - 1 && " → "}
                             </span>
                           ))}
                         </div>
@@ -356,10 +708,8 @@ const NumerologyCalculator = () => {
                     )}
                     
                     <div>
-                      <span className="font-semibold text-white">
-                        {results.isMultipleWords ? 'Total Reduced Value:' : 'Reduced Value:'}
-                      </span> 
-                      <span className="text-cyan-200 ml-2">{results.reducedValue}</span>
+                      <span className="font-semibold text-white">Final Value:</span> 
+                      <span className="text-cyan-200 ml-2">{results.traditional?.reducedValue || 0}</span>
                     </div>
                   </div>
                 </div>
